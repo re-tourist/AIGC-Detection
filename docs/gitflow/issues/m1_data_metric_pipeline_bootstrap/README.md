@@ -6,7 +6,8 @@
   - `https://github.com/re-tourist/AIGC-Detection/milestone/2`
 - Local implementation status:
   - M1 issue work is complete in the local workspace
-  - GitHub issue state is intentionally unchanged until push / PR is requested
+  - real BR-Gen rehearsal has passed on the current source drop
+  - GitHub issue and milestone state are expected to be closed as part of formal M1 closeout
 
 - Issue docs:
   - `docs/gitflow/issues/m1_data_metric_pipeline_bootstrap/issue_1.1_freeze_contract.md`

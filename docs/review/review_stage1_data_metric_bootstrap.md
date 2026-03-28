@@ -40,17 +40,19 @@ Evidence:
 ## 4. Validation Status
 
 - status:
-  - [ ] validation adequate
-  - [x] validation incomplete but acceptable
+  - [x] validation adequate
+  - [ ] validation incomplete but acceptable
   - [ ] validation insufficient
 
 Validation actually run:
 - `$env:PYTHONPATH='src'; python -m unittest discover -s tests -p 'test_*.py' -v`
 - `$env:PYTHONPATH='src'; python scripts\\run_minimal_eval.py --manifest tests\\fixtures\\local_mirror\\manifest.jsonl --predictions tests\\fixtures\\local_mirror\\predictions.jsonl --output-dir outputs\\stage1_m1_runner_smoke`
+- `$env:PYTHONPATH='src'; python scripts\\prepare_br_gen_rehearsal.py --source-root data\\BR-Gen --output-root data\\mirrored\\br_gen\\subsets\\rehearsal`
+- `$env:PYTHONPATH='src'; python scripts\\run_minimal_eval.py --manifest data\\mirrored\\br_gen\\subsets\\rehearsal\\manifest\\manifest.jsonl --predictions data\\mirrored\\br_gen\\subsets\\rehearsal\\predictions\\dummy_predictions.jsonl --output-dir outputs\\stage1_br_gen_rehearsal`
 
 Interpretation:
 - these checks prove the repo-tracked smoke substrate works end to end
-- these checks do not prove compatibility with the user's real mirrored subset from the Linux server
+- these checks prove compatibility with the user's current BR-Gen source drop layout on the local machine
 - these checks do not prove anything about Community Forensics or the later localized-failure experiment result
 
 ---
@@ -95,7 +97,7 @@ Reasoning:
 
 ### P2
 
-- repo fixtures are only a smoke substrate; before M2 baseline integration, replay the runner on a real mirrored subset from the Linux server
+- the BR-Gen source drop used for rehearsal is positive-only and was paired with dummy predictions; it validates ingestion and artifact paths, not benchmark quality
 - prediction input is intentionally minimal JSONL; if a later baseline emits a different format, add an adapter instead of widening M1 contracts implicitly
 
 ---

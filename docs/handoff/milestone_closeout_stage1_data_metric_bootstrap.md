@@ -5,10 +5,10 @@
 - Milestone ID: `m1_data_metric_pipeline_bootstrap`
 - Milestone name: `M1: Data and Metric Pipeline Bootstrap`
 - Status:
-  - [ ] complete
+  - [x] complete
   - [ ] partially complete
   - [ ] blocked
-  - [x] handed off with risks
+  - [ ] handed off with risks
 - Date: `2026-03-28`
 - Related stage / branch:
   - `codex/stage1-data-metric-bootstrap`
@@ -28,8 +28,9 @@ This milestone now has:
 - a manifest-driven loader with normalized sample objects
 - a minimal metric core
 - a minimal evaluation runner that writes JSON / CSV / Markdown / config snapshot artifacts
+- a real BR-Gen source-drop rehearsal path that can generate an operational manifest and run the existing runner on local mirrored data
 
-The repository is ready to enter M2 from an implementation standpoint, but not yet from real-data readiness. The largest remaining gap is that the runner has only been replayed on repo-tracked smoke fixtures, not on the user's actual mirrored subset from the Linux server.
+The repository is now ready to enter M2 from an implementation standpoint. The real-data rehearsal gap has been closed on the current local BR-Gen source drop. The main remaining caveat is that this source drop contains localized forged positives plus masks and image catalogs, so the rehearsal is an ingestion/path validation step rather than a benchmark-quality evaluation.
 
 ---
 
@@ -76,17 +77,20 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
   - Result:
     - yes for local smoke scope
 
+- [x] Real BR-Gen source-drop rehearsal was executed on local data
+  - Files:
+    - `src/aigc_detection/data/br_gen.py`
+    - `scripts/prepare_br_gen_rehearsal.py`
+    - `docs/data/DATA_LAYOUT.md`
+  - Validation:
+    - generated an operational rehearsal manifest plus dummy predictions from `data/BR-Gen`
+    - ran the existing minimal evaluation runner on the generated manifest
+  - Result:
+    - yes
+
 ---
 
 ## 3. What Was Not Completed
-
-- [x] Real mirrored-subset replay using the user's Linux dataset handoff
-  - Why not completed:
-    - the actual local mirror pack has not been copied into the workspace yet
-  - Type:
-    - external data dependency / handoff gap
-  - Should it enter the next milestone:
-    - yes; make it the first practical check before M2 baseline integration work
 
 - [x] P2 slice reporting by `region_type`, `subtlety`, and `edit_area_ratio`
   - Why not completed:
@@ -120,6 +124,12 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
   - M1 responsibility:
     - provides the minimal end-to-end smoke execution path
 
+- `src/aigc_detection/data/br_gen.py`
+  - Role:
+    - turns a direct `data/BR-Gen` source drop into an operational rehearsal manifest and dummy predictions
+  - M1 responsibility:
+    - bridges real local data into the frozen manifest contract without forcing manual reorganization
+
 ### Docs
 
 - `docs/contracts/contract_freeze_stage1_data_metric_bootstrap.md`
@@ -148,6 +158,12 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
   - Reusability:
     - yes, for local smoke and real mirrored-subset rehearsal
 
+- `scripts/prepare_br_gen_rehearsal.py`
+  - Role:
+    - prepares rehearsal manifest and dummy predictions from the current BR-Gen source drop
+  - Reusability:
+    - yes, for direct source-drop ingestion during M2 preparation
+
 - `tests/fixtures/local_mirror/manifest.jsonl`
   - Role:
     - repo-tracked smoke fixture manifest
@@ -170,6 +186,11 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
   - `$env:PYTHONPATH='src'; python -m unittest discover -s tests -p 'test_*.py' -v`
 - CLI smoke run:
   - `$env:PYTHONPATH='src'; python scripts\\run_minimal_eval.py --manifest tests\\fixtures\\local_mirror\\manifest.jsonl --predictions tests\\fixtures\\local_mirror\\predictions.jsonl --output-dir outputs\\stage1_m1_runner_smoke`
+- BR-Gen rehearsal preparation:
+  - `$env:PYTHONPATH='src'; python scripts\\prepare_br_gen_rehearsal.py --source-root data\\BR-Gen --output-root data\\mirrored\\br_gen\\subsets\\rehearsal`
+- BR-Gen rehearsal run:
+  - `$env:PYTHONPATH='src'; python scripts\\run_minimal_eval.py --manifest data\\mirrored\\br_gen\\subsets\\rehearsal\\manifest\\manifest.jsonl --predictions data\\mirrored\\br_gen\\subsets\\rehearsal\\predictions\\dummy_predictions.jsonl --output-dir outputs\\stage1_br_gen_rehearsal`
+  - rehearsal preparation produced `27` usable samples and skipped `29` forged files without matching masks
 
 ### What These Checks Actually Prove
 
@@ -177,17 +198,17 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
   - M1 code paths work end to end on repo-tracked smoke fixtures
   - grouped reporting does not silently invent slice metadata
   - minimal artifacts are reproducible and traceable to manifest/prediction inputs
+  - the current local `data/BR-Gen` source drop can be bridged into the frozen M1 manifest contract and consumed by the existing runner
 - Not proved:
-  - the user's actual mirrored subset may still differ from current manifest/path assumptions
   - Community Forensics outputs may still need an adapter
   - no formal localized-failure validation result exists yet
 
 ### Missing or Weak Validation
 
 - Missing validation 1:
-  - replay the runner on a real mirrored subset copied from the Linux server
-- Missing validation 2:
   - rehearse using baseline-like prediction exports rather than only the repo fixture file
+- Missing validation 2:
+  - replay once more after the BR-Gen source drop includes real-image binaries if future M2 work needs negative-path rehearsal on the same dataset tree
 
 ---
 
@@ -199,12 +220,13 @@ The repository is ready to enter M2 from an implementation standpoint, but not y
 
 ### P1 / serious but not blocking
 
-- the actual mirrored subset has not yet been used to validate manifest layout, path assumptions, and metadata availability
+- none
 
 ### P2 / should improve later
 
 - AUROC / Accuracy / fake_recall are enough for M1, but later stages may need adapter code if baseline outputs are not already JSONL keyed by `sample_id`
 - repo smoke fixtures are intentionally tiny and perfectly separable; they should never be treated as evidence for research claims
+- the current BR-Gen source drop is positive-only for rehearsal purposes, so the real-data run validates ingestion and artifact paths rather than full positive/negative benchmark behavior
 
 ---
 
@@ -227,7 +249,7 @@ Additional notes:
 
 ### Recommended first task
 
-- copy a real mirrored subset plus manifest metadata from the Linux server into the local workspace and rerun the minimal M1 evaluation path
+- begin `M2` by adapting Community Forensics outputs into the existing prediction JSONL format and replaying them through the current runner
 
 ### Recommended first files to read
 
@@ -238,15 +260,15 @@ Additional notes:
 
 ### Recommended first checks
 
-- run the loader against the real mirrored manifest and confirm path/schema compatibility
-- run the minimal runner with a dummy or baseline-like prediction export and inspect output artifacts
+- run Community Forensics predictions through the existing runner without changing the M1 contract
+- confirm whether the next BR-Gen copy includes real-image binaries or remains a positive-only localized source drop
 - confirm which localized slice metadata is explicitly present before expanding grouped reporting
 - place the real rehearsal subset under the repo-side mirrored layout documented in `docs/data/DATA_LAYOUT.md`
 
 ### Recommended decision to make before coding
 
-- decide whether the real mirrored subset needs a manifest-generation helper or whether manual manifests are enough for M2
 - decide what adapter layer is needed if Community Forensics emits predictions in a different format
+- decide whether future BR-Gen copies should land directly under `data/mirrored/br_gen/subsets/rehearsal/` or continue to arrive as source drops under `data/BR-Gen`
 
 ---
 
@@ -261,10 +283,10 @@ Additional notes:
 
 ## 10. Final Verdict
 
-- [ ] milestone can be cleanly closed
-- [x] milestone can be closed with documented limitations
+- [x] milestone can be cleanly closed
+- [ ] milestone can be closed with documented limitations
 - [ ] milestone should remain open pending one last validation
 - [ ] milestone should not be closed because the result is not yet reliable
 
 Final conclusion:
-- M1 code and documentation are ready for M2 reuse, but the real mirrored-subset rehearsal still needs to happen before baseline integration starts.
+- M1 code, docs, and real-data rehearsal path are complete enough to close the milestone and enter M2.

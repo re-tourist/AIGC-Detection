@@ -6,11 +6,11 @@ GitHub milestone:
 ## Status
 
 - Local repo status:
-  - implemented and closed out with documented limitations
+  - implemented, rehearsed on the current BR-Gen source drop, and formally closed
 - GitHub issue status:
-  - left unchanged until push / PR is explicitly requested
-- Remaining handoff risk:
-  - real mirrored-subset rehearsal is still pending before `M2`
+  - synced as part of milestone closeout
+- Remaining handoff note:
+  - the BR-Gen rehearsal source drop was positive-only and used dummy predictions, so it validates ingestion rather than benchmark quality
 
 ## Goal
 

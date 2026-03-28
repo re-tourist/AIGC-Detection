@@ -229,6 +229,21 @@ Optional but useful:
 - `predictions/dummy_predictions.jsonl`
 - `predictions/community_forensics_predictions.jsonl`
 
+If the first source drop arrives outside the recommended layout, for example under:
+
+```text
+data/BR-Gen/
+```
+
+do not manually reorganize the raw files first.
+Instead, generate the rehearsal manifest and dummy predictions with:
+
+```text
+python scripts/prepare_br_gen_rehearsal.py --source-root data/BR-Gen --output-root data/mirrored/br_gen/subsets/rehearsal
+```
+
+This keeps the source drop untouched while still creating an operational rehearsal subset.
+
 ---
 
 ## Why This Layout Is Better Than a Single Hardcoded Dataset Folder

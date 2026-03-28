@@ -18,7 +18,7 @@
 ## 2. Current Phase
 
 - Current milestone / stage:
-  - 当前处于 `M1 closeout complete locally — M2 not started`
+  - 当前处于 `M1 formally closed — ready for M2 Community Forensics integration`
 - Why this stage exists:
   - 在 Community Forensics 接入和正式验证实验之前，先建立 localized evaluation 所需的最小 data pipeline 和 metric pipeline。
 - What this stage should prove or deliver:
