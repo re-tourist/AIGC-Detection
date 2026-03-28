@@ -241,6 +241,7 @@ Additional notes:
 - run the loader against the real mirrored manifest and confirm path/schema compatibility
 - run the minimal runner with a dummy or baseline-like prediction export and inspect output artifacts
 - confirm which localized slice metadata is explicitly present before expanding grouped reporting
+- place the real rehearsal subset under the repo-side mirrored layout documented in `docs/data/DATA_LAYOUT.md`
 
 ### Recommended decision to make before coding
 
