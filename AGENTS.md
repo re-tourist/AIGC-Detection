@@ -9,6 +9,7 @@ It defines the durable working rules that should apply across normal development
 
 Agents should use this file together with:
 - project docs under `docs/`
+- gitflow / GitHub workflow docs under `docs/gitflow/`
 - project configuration under `.codex/`
 - any nested `AGENTS.md` / override docs closer to the working directory
 
@@ -133,9 +134,28 @@ When behavior changes, consider whether these must be updated:
 - `docs/plan/`
 - `docs/review/`
 - `docs/contracts/`
+- `docs/gitflow/`
 - examples, scripts, config comments, or usage snippets
 
 Do not assume code-only changes are sufficient.
+
+---
+
+## GitHub workflow docs
+
+When the task involves GitHub operations, follow the repo docs under:
+
+- `docs/gitflow/GITHUB_OPERATIONS.md`
+- `docs/gitflow/milestones/*`
+- `docs/gitflow/issues/*`
+
+Treat these docs as the source of truth for:
+
+- milestone naming and scope
+- issue body structure
+- suggested branch naming for issues
+- commit message format
+- PR linkage expectations
 
 ---
 
