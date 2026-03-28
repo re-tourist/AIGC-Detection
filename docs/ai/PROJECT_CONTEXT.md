@@ -18,11 +18,11 @@
 ## 2. Current Phase
 
 - Current milestone / stage:
-  - 当前处于 `M1 active — Data and Metric Pipeline Bootstrap`
+  - 当前处于 `M1 closeout complete locally — M2 not started`
 - Why this stage exists:
   - 在 Community Forensics 接入和正式验证实验之前，先建立 localized evaluation 所需的最小 data pipeline 和 metric pipeline。
 - What this stage should prove or deliver:
-  - 产出 manifest-driven local mirror loader、normalized sample objects、minimal metric core 和最小 artifact 输出路径。
+  - 已产出 manifest-driven local mirror loader、normalized sample objects、minimal metric core 和最小 artifact 输出路径，但尚未对真实 mirrored subset 做复核。
 - What is explicitly out of scope in this stage:
   - 不接入 Community Forensics
   - 不开始正式 localized failure validation

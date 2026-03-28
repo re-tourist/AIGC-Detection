@@ -3,6 +3,15 @@
 GitHub milestone:
 - `https://github.com/re-tourist/AIGC-Detection/milestone/2`
 
+## Status
+
+- Local repo status:
+  - implemented and closed out with documented limitations
+- GitHub issue status:
+  - left unchanged until push / PR is explicitly requested
+- Remaining handoff risk:
+  - real mirrored-subset rehearsal is still pending before `M2`
+
 ## Goal
 
 先把验证实验需要的 data pipeline 和 metric pipeline 搭起来，

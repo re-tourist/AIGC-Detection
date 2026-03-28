@@ -7,9 +7,9 @@
 - Suggested branch family: `codex/stage1-*`
 - Status:
   - [ ] draft
-  - [x] active
+  - [ ] active
   - [x] frozen
-  - [ ] complete
+  - [x] complete
 
 ---
 
@@ -217,3 +217,6 @@ At stage close, produce or update:
   - 哪些 slice 维度仍然 blocked
 - suggested next stage entry point:
   - `M2: Community Forensics Integration`
+
+Closeout note:
+- `M1` 已在本地完成并形成 closeout，但进入 `M2` 之前仍需要用用户真实 mirrored subset 做一次复核。
