@@ -70,7 +70,7 @@ Examples:
 
 Issue docs should live under:
 
-- `docs/gitflow/issues/stage<stage>/`
+- `docs/gitflow/issues/<milestone-or-stage-slug>/`
 
 ---
 
@@ -107,9 +107,9 @@ codex/stage<stage>-<short-slug>
 
 Examples:
 
-- `codex/stage1-contract-manifests`
-- `codex/stage1-baseline-pipeline`
-- `codex/stage1-localized-slices`
+- `codex/stage1-data-contract`
+- `codex/stage1-data-loader`
+- `codex/stage1-metric-core`
 
 Rules:
 
@@ -206,15 +206,16 @@ Do not:
 
 For normal GitHub-driven work, use this order:
 
-1. confirm milestone doc exists
-2. confirm issue doc exists
-3. create milestone on GitHub
-4. create issue on GitHub from the issue doc
-5. create/switch branch for that issue
-6. implement and validate within issue boundary
-7. commit using the commit format above
-8. open PR referencing the issue and milestone
-9. review against `docs/review/code_review.md`
+1. if needed, do repo-admin roadmap realignment outside the active milestone
+2. confirm milestone doc exists
+3. confirm issue doc exists
+4. create milestone on GitHub
+5. create issue on GitHub from the issue doc
+6. create/switch branch for that issue
+7. implement and validate within issue boundary
+8. commit using the commit format above
+9. open PR referencing the issue and milestone
+10. review against `docs/review/code_review.md`
 
 ---
 

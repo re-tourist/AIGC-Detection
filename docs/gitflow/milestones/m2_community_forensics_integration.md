@@ -1,5 +1,8 @@
 # M2: Community Forensics Integration
 
+GitHub milestone:
+- `https://github.com/re-tourist/AIGC-Detection/milestone/3`
+
 ## Goal
 
 把 Community Forensics 作为 baseline 候选接入当前项目，

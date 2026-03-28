@@ -1,5 +1,8 @@
 # M1: Data and Metric Pipeline Bootstrap
 
+GitHub milestone:
+- `https://github.com/re-tourist/AIGC-Detection/milestone/2`
+
 ## Goal
 
 先把验证实验需要的 data pipeline 和 metric pipeline 搭起来，
@@ -30,3 +33,11 @@
 
 - localized eval dataset 全量保留在 Linux 服务器
 - 本地只需要目录结构、manifest 和小样本用于 smoke check
+
+## Issue Set
+
+- Issue 1.1 — Freeze M1 data contract, manifest schema, and artifact contract
+- Issue 1.2 — Implement local mirror loader and normalized sample object
+- Issue 1.3 — Implement minimal metric core
+- Issue 1.4 — Implement minimal evaluation runner and artifact save path
+- Issue 1.5 — Review and milestone closeout

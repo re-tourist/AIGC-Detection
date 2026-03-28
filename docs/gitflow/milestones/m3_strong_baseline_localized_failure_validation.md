@@ -1,5 +1,8 @@
 # M3: Strong Baseline Localized Failure Validation
 
+GitHub milestone:
+- `https://github.com/re-tourist/AIGC-Detection/milestone/4`
+
 ## Goal
 
 在你的 localized eval protocol 下正式评测 strong baseline，

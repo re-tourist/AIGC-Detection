@@ -3,6 +3,7 @@
 Status:
 - This issue set belongs to the earlier aggressive milestone draft.
 - Do not treat it as the current execution order.
+- GitHub issues `#1-#5` have been superseded and closed.
 - The current macro roadmap has been reset to:
   - `M1: Data and Metric Pipeline Bootstrap`
   - `M2: Community Forensics Integration`
