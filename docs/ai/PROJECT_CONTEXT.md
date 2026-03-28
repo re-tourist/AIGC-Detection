@@ -18,16 +18,16 @@
 ## 2. Current Phase
 
 - Current milestone / stage:
-  - 当前处于 `Bootstrap / Stage 1 pre-execution freeze`
+  - 当前处于 `M1 active — Data and Metric Pipeline Bootstrap`
 - Why this stage exists:
-  - 先把实验目标、issue 拆分、review 规则与 contract freeze 固化，避免在没有边界的情况下直接进入实验开发。
+  - 在 Community Forensics 接入和正式验证实验之前，先建立 localized evaluation 所需的最小 data pipeline 和 metric pipeline。
 - What this stage should prove or deliver:
-  - 产出一套可执行的 Stage 1 约束文档，使后续 agent 可以围绕“strong baseline 问题成立性验证”推进，而不是直接跳到方法开发。
+  - 产出 manifest-driven local mirror loader、normalized sample objects、minimal metric core 和最小 artifact 输出路径。
 - What is explicitly out of scope in this stage:
-  - 不实现 local branch
-  - 不实现 deployment-aware consistency
-  - 不开始大规模训练
-  - 不修改 task definition / split protocol / contract freeze 的语义边界
+  - 不接入 Community Forensics
+  - 不开始正式 localized failure validation
+  - 不做大规模服务器运行
+  - 不实现 local branch / deployment-aware consistency
 
 ## 3. High-Level Goal
 
@@ -62,9 +62,9 @@
 
 Agents 预期帮助完成：
 
-- 约束文档与执行文档起草
-- 在冻结范围内实现最小实验代码与配置
-- 窄验证、结果整理、artifact 组织
+- M1 contract / plan / issue docs 冻结
+- local mirror data loader 与 normalized sample object 实现
+- minimal metric core 与最小 evaluation runner
 - issue 级报告与 milestone closeout 起草
 - review 标准下的自检与结构化汇报
 
@@ -79,15 +79,15 @@ Agents 不应自行决定：
 
 Project-specific constraints:
 - Constraint 1:
-  - 在 Stage 1 进入执行前，优先以文档冻结 task definition、issue split、contract boundary；不允许先开发再补解释。
+  - 在 M1 内，先冻结 manifest schema、metric priority、artifact contract 和 stop rules，再实现 loader / metric / runner。
 - Constraint 2:
   - 大计算量训练/评估命令不要默认在当前工作机执行，必须单独整理给用户迁移到 Linux 服务器。
 - Constraint 3:
-  - 如果缺少关键事实或存在实验语义不确定性，不要自行拍板；应 stop and report。
+  - 如果 local mirror pack、显式 slice metadata 或 derived-field rule 缺失，不要自行补齐；应 stop and report。
 - Constraint 4:
   - 不要把 “problem-validation experiment” 静默扩大成方法创新阶段。
 - Constraint 5:
-  - 所有比较都应优先保持 backbone、数据配比、split protocol、阈值协议和 artifact 记录的一致性。
+  - `localized_edit` 是 M1 primary path；`full_image_fake` 在 M1 只是 schema compatibility path。
 
 ## 7. Success Criteria for This Phase
 
@@ -95,15 +95,15 @@ A phase is considered successful when:
 
 - [x] `docs/snapshots/project_snapshot.md` 已建立并诚实描述仓库现状与缺口
 - [x] `docs/ai/PROJECT_CONTEXT.md` 已明确人类决策边界与 agent 执行边界
-- [x] Stage 1 的 plan / issue split / contract freeze / review checklist 已建立且相互一致
+- [x] M1 的 active plan / issue split / contract freeze / review checklist 已建立且相互一致
 
 Optional quantitative gates:
 - metric / threshold:
-  - 当前阶段无数值 gate；目标是把执行边界冻结清楚
+  - 当前阶段的最低门槛是 overall metrics 可运行并可落最小 artifact
 - runtime / cost budget:
   - 当前阶段仅允许轻量文档与仓库检查
 - reproducibility requirement:
-  - 未来 Stage 1 必须补充可复用命令、配置与 artifact 路径约定
+  - M1 需要记录 manifest / prediction 输入和 runner 配置快照
 
 ## 8. Stop Conditions
 
@@ -112,9 +112,9 @@ If any of these happen, the agent should stop and report instead of pushing forw
 - Stop condition 1:
   - 需要改变 task definition / split protocol / contract freeze 才能继续
 - Stop condition 2:
-  - 关键 baseline、数据集、slice 标注或 evaluation meaning 在仓库内外都无法确认
+  - local mirror pack、manifest 所需字段、或 slice metadata 的存在性无法确认
 - Stop condition 3:
-  - 下一步工作必须引入未批准的新依赖、重大结构重排或阶段扩 scope
+  - 下一步工作必须引入未批准的新依赖、重大结构重排、或把 M1 扩成 baseline integration / formal validation
 
 Examples:
 - validation results contradict task assumptions
@@ -131,17 +131,18 @@ Core files:
 - `.codex/agents/reviewer.toml`
 
 Planning docs:
-- `docs/plan/plan_stage1_problem_validation.md`
-- `docs/plan/issue_stage1_problem_validation.md`
+- `docs/plan/plan_stage1_data_metric_bootstrap.md`
+- `docs/plan/issue_stage1_data_metric_bootstrap.md`
 
 Contracts / review docs:
-- `docs/contracts/contract_freeze_stage1_problem_validation.md`
+- `docs/contracts/contract_freeze_stage1_data_metric_bootstrap.md`
 - `docs/review/code_review.md`
 
 Research context docs:
 - `docs/experiment_background.md`
 - `docs/localized_failure_on_strong_baseline_protocol.md`
 - `docs/实验开展先决条件分析.md`
+- `docs/gitflow/MILESTONE_ROADMAP.md`
 
 ## 10. Reporting Preference
 
