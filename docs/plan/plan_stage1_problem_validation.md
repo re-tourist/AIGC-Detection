@@ -1,5 +1,14 @@
 # plan_stage1
 
+Status note:
+- This file is an earlier aggressive Stage 1 draft.
+- It should not be used as the current execution entry.
+- Current macro milestone planning has been reset to:
+  - `M1: Data and Metric Pipeline Bootstrap`
+  - `M2: Community Forensics Integration`
+  - `M3: Strong Baseline Localized Failure Validation`
+- Until the new issue split is drafted, treat this file as archived planning context only.
+
 ## Stage Title
 
 - Stage ID: `stage1_problem_validation`

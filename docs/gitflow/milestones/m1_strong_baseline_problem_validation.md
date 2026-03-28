@@ -1,4 +1,13 @@
-# M1: Strong Baseline Problem Validation
+# Deprecated Draft: M1 Strong Baseline Problem Validation
+
+Status:
+- This document reflects an earlier aggressive split that jumped too early into baseline implementation and validation.
+- It is kept only as a historical draft for traceability.
+- The current macro roadmap is now defined by:
+  - `docs/gitflow/MILESTONE_ROADMAP.md`
+  - `docs/gitflow/milestones/m1_data_metric_pipeline_bootstrap.md`
+  - `docs/gitflow/milestones/m2_community_forensics_integration.md`
+  - `docs/gitflow/milestones/m3_strong_baseline_localized_failure_validation.md`
 
 GitHub milestone:
 - `https://github.com/re-tourist/AIGC-Detection/milestone/1`

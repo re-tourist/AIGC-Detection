@@ -1,5 +1,10 @@
 # contract_freeze
 
+Status note:
+- This contract belongs to the earlier aggressive Stage 1 draft.
+- It should not be treated as the active freeze for the new M1 -> M2 -> M3 roadmap.
+- Keep it only as archived boundary context until the new milestone-specific contracts are drafted.
+
 ## Contract Title
 
 - Contract ID: `contract_stage1_problem_validation_20260327`

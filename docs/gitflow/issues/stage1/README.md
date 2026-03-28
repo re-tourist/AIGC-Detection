@@ -1,5 +1,14 @@
 # Stage 1 GitHub Issue Index
 
+Status:
+- This issue set belongs to the earlier aggressive milestone draft.
+- Do not treat it as the current execution order.
+- The current macro roadmap has been reset to:
+  - `M1: Data and Metric Pipeline Bootstrap`
+  - `M2: Community Forensics Integration`
+  - `M3: Strong Baseline Localized Failure Validation`
+- A new issue split should be drafted after the new milestone docs are reviewed.
+
 - Milestone doc:
   - `docs/gitflow/milestones/m1_strong_baseline_problem_validation.md`
 - GitHub milestone:

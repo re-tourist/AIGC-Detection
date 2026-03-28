@@ -37,8 +37,9 @@ M<number>: <short milestone name>
 Examples:
 
 - `M0: Project Bootstrap`
-- `M1: Strong Baseline Problem Validation`
-- `M2: Module-to-Failure-Mode Validation`
+- `M1: Data and Metric Pipeline Bootstrap`
+- `M2: Community Forensics Integration`
+- `M3: Strong Baseline Localized Failure Validation`
 
 Milestone description should contain:
 

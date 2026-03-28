@@ -1,5 +1,14 @@
 # issue_stage1
 
+Status note:
+- This file belongs to the earlier aggressive Stage 1 draft.
+- It is no longer the current execution split.
+- Current macro roadmap is now:
+  - `M1: Data and Metric Pipeline Bootstrap`
+  - `M2: Community Forensics Integration`
+  - `M3: Strong Baseline Localized Failure Validation`
+- A new issue split should be drafted after the new milestone docs are reviewed.
+
 This file lists the issues for a single stage.
 Each issue should be independently executable, reviewable, and closable.
 
