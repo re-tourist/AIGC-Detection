@@ -1,0 +1,21 @@
+# BR-Gen
+
+- Purpose: primary localized-edit evaluation source for M1 rehearsal, M2 smoke support, and M3 formal validation.
+- Official source root:
+  - `/media/ruanzhengsen/02EE2033DCBE79181/xyj/BRGen/BR-Gen`
+- Container runtime source root for current Docker setup:
+  - `/home/workspace/AIGC/data/BRGen/BR-Gen`
+- Expected raw layout:
+  - `Forged/<generator>/<region>/<source>/<file>`
+  - `Mask` or `Masked`
+  - `Real`, `RealImage`, or `real`
+- Local repo role:
+  - mirrored smoke and rehearsal subsets
+  - formal M3 manifests and layout-audit artifacts
+  - not a full raw dataset mirror
+- Evaluation role:
+  - `localized_edit` validation under the repository manifest and metric contract
+- Not in scope:
+  - copying the full raw dataset into the repository
+  - inventing `subtlety` metadata
+  - treating temporary smoke artifacts as benchmark evidence
