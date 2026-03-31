@@ -1,0 +1,37 @@
+# M3 GitHub Issue Index
+
+- Milestone doc:
+  - `docs/gitflow/milestones/m3_strong_baseline_localized_failure_validation.md`
+- GitHub milestone:
+  - `https://github.com/re-tourist/AIGC-Detection/milestone/4`
+- Local implementation status:
+  - Issue 3.1 through Issue 3.3 are implemented and should be backfilled as closed
+  - Issue 3.5 is implemented and should be backfilled as closed after the expanded restricted-pilot evidence pass
+  - Issue 3.4 remains open because formal M3 is still blocked
+  - Issue 3.0 tracks the gitflow and GitHub backfill work itself
+
+- Issue docs and GitHub sync placeholders:
+  - Issue 3.0
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.0_github_sync_and_backfill.md`
+    - GitHub: pending creation
+    - state: pending creation
+  - Issue 3.1
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.1_intake_and_contract.md`
+    - GitHub: pending creation
+    - state: pending creation
+  - Issue 3.2
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.2_formal_manifest_and_export.md`
+    - GitHub: pending creation
+    - state: pending creation
+  - Issue 3.3
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.3_localized_failure_report.md`
+    - GitHub: pending creation
+    - state: pending creation
+  - Issue 3.4
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.4_linux_runs_and_closeout.md`
+    - GitHub: pending creation
+    - state: pending creation
+  - Issue 3.5
+    - doc: `docs/gitflow/issues/m3_strong_baseline_localized_failure_validation/issue_3.5_restricted_pilot_evidence_expansion.md`
+    - GitHub: pending creation
+    - state: pending creation
