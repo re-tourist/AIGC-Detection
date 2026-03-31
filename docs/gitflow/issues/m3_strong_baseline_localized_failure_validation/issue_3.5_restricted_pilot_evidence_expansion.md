@@ -1,7 +1,8 @@
 # Issue 3.5 — Expand restricted pilot evidence and failure mapping
 
 GitHub issue:
-- pending creation
+- #22
+- `https://github.com/re-tourist/AIGC-Detection/issues/22`
 
 ## Background
 

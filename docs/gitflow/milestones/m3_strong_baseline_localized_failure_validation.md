@@ -132,9 +132,9 @@ Current execution note:
 
 ## Issue Set
 
-- Issue 3.0 - Sync M3 GitHub milestone and issue set
-- Issue 3.1 - Freeze M3 contract and audit official BR-Gen raw layout
-- Issue 3.2 - Prepare formal BR-Gen manifests and perturbation-aware export
-- Issue 3.3 - Add localized-failure sidecar reporting on top of the current runner
-- Issue 3.4 - Execute formal Linux run and write milestone closeout
-- Issue 3.5 - Expand restricted pilot evidence and failure mapping
+- #17 Issue 3.0 - Sync M3 GitHub milestone and issue set
+- #18 Issue 3.1 - Freeze M3 contract and audit official BR-Gen raw layout
+- #19 Issue 3.2 - Prepare formal BR-Gen manifests and perturbation-aware export
+- #20 Issue 3.3 - Add localized-failure sidecar reporting on top of the current runner
+- #21 Issue 3.4 - Execute formal Linux run and write milestone closeout
+- #22 Issue 3.5 - Expand restricted pilot evidence and failure mapping

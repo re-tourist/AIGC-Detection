@@ -1,7 +1,8 @@
 # Issue 3.3 — Add localized-failure sidecar reporting on top of the current runner
 
 GitHub issue:
-- pending creation
+- #20
+- `https://github.com/re-tourist/AIGC-Detection/issues/20`
 
 ## Background
 

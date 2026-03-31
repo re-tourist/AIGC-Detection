@@ -1,7 +1,8 @@
 # Issue 3.4 — Execute formal Linux run and write milestone closeout
 
 GitHub issue:
-- pending creation
+- #21
+- `https://github.com/re-tourist/AIGC-Detection/issues/21`
 
 ## Background
 

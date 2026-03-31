@@ -1,7 +1,8 @@
 # Issue 3.2 — Prepare formal BR-Gen manifests and perturbation-aware export
 
 GitHub issue:
-- pending creation
+- #19
+- `https://github.com/re-tourist/AIGC-Detection/issues/19`
 
 ## Background
 

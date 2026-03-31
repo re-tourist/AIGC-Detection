@@ -1,7 +1,8 @@
 # Issue 3.1 — Freeze M3 contract and audit official BR-Gen raw layout
 
 GitHub issue:
-- pending creation
+- #18
+- `https://github.com/re-tourist/AIGC-Detection/issues/18`
 
 ## Background
 

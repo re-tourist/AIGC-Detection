@@ -1,7 +1,8 @@
 # Issue 3.0 — Sync M3 GitHub milestone and issue set
 
 GitHub issue:
-- pending creation
+- #17
+- `https://github.com/re-tourist/AIGC-Detection/issues/17`
 
 ## Background
 
