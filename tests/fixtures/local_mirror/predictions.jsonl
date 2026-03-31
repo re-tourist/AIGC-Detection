@@ -1,0 +1,6 @@
+{"sample_id":"loc_clean_fake","score":0.91,"meta":{"source":"fixture"}}
+{"sample_id":"loc_clean_real","score":0.11,"meta":{"source":"fixture"}}
+{"sample_id":"loc_jpeg_fake","score":0.77,"meta":{"source":"fixture"}}
+{"sample_id":"loc_jpeg_real","score":0.26,"meta":{"source":"fixture"}}
+{"sample_id":"full_clean_fake","score":0.68,"meta":{"source":"fixture"}}
+{"sample_id":"full_clean_real","score":0.08,"meta":{"source":"fixture"}}
