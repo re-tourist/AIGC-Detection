@@ -53,7 +53,7 @@
 
 7. 当前起始分支与提交：
    - branch: `codex/stage4-coco-local-module-entry`
-   - commit: `adc4797`
+   - commit: `a17c860`
 
 你接下来具体怎么做，以我后续补充的正式 M4 提示词为准。
 在开始实现前，先读取上述文档并复述你理解到的边界，再进入具体工作。
