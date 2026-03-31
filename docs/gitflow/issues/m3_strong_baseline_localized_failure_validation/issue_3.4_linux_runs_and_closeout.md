@@ -1,4 +1,4 @@
-# Issue 3.4 — Execute formal Linux run and write milestone closeout
+# Issue 3.4 - Formal Linux run and formal closeout path (deferred)
 
 GitHub issue:
 - #21
@@ -8,14 +8,16 @@ GitHub issue:
 
 M3 formal evidence depends on the official BR-Gen root and baseline weights on
 Linux. Local implementation and the completed restricted pilot are not
-sufficient to close the milestone.
+sufficient to establish a formal benchmark claim.
 
 Current repo truth:
 
 - the expanded full-COCO restricted pilot has already been executed
-- formal M3 remains blocked because ImageNet / Places real negatives are still
-  unavailable
-- this issue should remain open on GitHub as the blocked formal closeout issue
+- formal M3 remains unavailable because ImageNet / Places real negatives are
+  still unavailable
+- the project is now moving to M4 on the COCO-only engineering line
+- this issue should be closed as deferred rather than left open as the active
+  next step
 
 ## Suggested Branch
 
@@ -23,41 +25,39 @@ Current repo truth:
 
 ## Goal
 
-Run the full formal localized-failure evaluation on Linux when prerequisites are
-available, then write the milestone closeout.
+Record the deferred formal path cleanly so that M3 can close with documented
+limitations and M4 can start from the restricted-pilot evidence base.
 
 ## Tasks
 
-- confirm formal prerequisites for ImageNet / Places real negatives are
-  available
-- run the full clean and degraded formal manifest flow on Linux
-- export formal predictions and produce base eval plus M3 sidecar artifacts
-- archive formal artifacts and write milestone closeout after the full run
+- record that the expanded `COCO-only restricted_pilot` is the last executed
+  M3 evidence line
+- document why the formal BR-Gen line is not being pursued before M4
 - separate clearly:
-  - already run
-  - implemented but not yet run
-  - Linux-only steps
+  - already run restricted-pilot work
+  - implemented but intentionally unrun formal work
+  - the next active line, which is M4 on COCO-only engineering scope
+- close the GitHub issue as deferred rather than leaving it ambiguous
 
 ## Resource Boundary
 
-- use the frozen official BR-Gen root and M3 perturbation settings
-- do not treat the restricted pilot as formal benchmark evidence
-- do not write closeout text that claims results not yet run
+- do not relabel restricted-pilot results as formal benchmark evidence
+- do not write closeout text that claims the formal line was run
+- do not keep the formal path open as if it were the next required action
 
 ## Non-Goals
 
 - no additional method work
-- no dataset relayout
-- no rerouting through an upstream paper-reproduction harness
+- no forced formal run without restored prerequisites
+- no benchmark overclaim
 
 ## Deliverable
 
-- Linux full-run artifacts
-- M3 closeout doc after formal execution
+- M3 closeout doc with explicit deferred-formal wording
+- a clean handoff into M4 on the COCO-only engineering line
 
 ## Acceptance
 
-- formal prerequisites are explicitly satisfied before execution
-- full run produces formal manifest, predictions, base eval artifacts, and M3
-  sidecar artifacts
-- closeout explicitly states what was actually run and what remains out of scope
+- the repo docs explicitly state that formal M3 was not executed
+- restricted-pilot artifacts remain the only executed evidence base
+- the formal path is closed as deferred, not left in an ambiguous open state

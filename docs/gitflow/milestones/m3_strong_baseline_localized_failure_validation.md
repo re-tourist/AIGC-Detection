@@ -2,6 +2,7 @@
 
 GitHub milestone:
 - `https://github.com/re-tourist/AIGC-Detection/milestone/4`
+- state: `CLOSED`
 
 ## Status
 
@@ -11,16 +12,19 @@ GitHub milestone:
     implemented
   - the expanded full-COCO restricted pilot has been executed on Linux and the
     resulting failure-evidence artifacts are available in the workspace
+  - an explicit M3 closeout and M4 handoff has been written
   - focused local tests pass in the current workspace
 - Remaining milestone status:
-  - formal M3 remains blocked because ImageNet / Places real negatives are
+  - the active executed path is the expanded `COCO-only restricted_pilot`
+  - formal M3 remains unavailable because ImageNet / Places real negatives are
     unavailable
-  - the executable and evidenced path is currently the expanded
-    `COCO-only restricted_pilot`
+  - formal M3 is not the active next step and is being explicitly deferred
 - Current evidence level:
   - restricted-pilot failure mapping exists
-  - formal benchmark evidence does not yet exist
-  - formal milestone closeout is not yet justified
+  - restricted-pilot evidence is sufficient for M4 method entry
+  - formal benchmark evidence does not exist
+  - the milestone is being closed with documented limitations, not as a formal
+    benchmark success
 
 ## Goal
 
@@ -30,9 +34,10 @@ localized edits under the current repository data, metric, and runner contract.
 Current execution note:
 
 - the expanded full-COCO restricted pilot is complete
-- formal M3 is still blocked
+- formal M3 is intentionally deferred
 - current M3 evidence is diagnostic and restricted-pilot scoped, not formal
   benchmark evidence
+- the practical handoff target is M4 on the COCO-only engineering line
 
 ## In Scope
 
@@ -45,6 +50,8 @@ Current execution note:
 - execute and analyze the expanded `COCO-only restricted_pilot`
 - write a Linux runbook that separates restricted-pilot evidence from the
   blocked formal full run
+- write a closeout that explicitly hands off to M4 on the COCO-only
+  engineering line
 
 ## Out of Scope
 
@@ -54,7 +61,7 @@ Current execution note:
 - heuristic inference of new slice metadata
 - treating `data/tmp/cf_smoke/` as benchmark evidence
 - treating restricted-pilot results as formal benchmark evidence
-- M4 or later method work
+- formal M3 continuation without restored negatives
 
 ## Execution Contract
 
@@ -127,8 +134,9 @@ Current execution note:
   - what it shows
   - what remains blocked
   - why it is not a formal benchmark claim
-- the formal closeout remains pending until full formal execution is actually
-  run
+- the milestone closeout explicitly states that M3 is being handed off through
+  the `COCO-only restricted_pilot` line
+- the formal path is either executed or explicitly deferred before leaving M3
 
 ## Issue Set
 
@@ -136,5 +144,5 @@ Current execution note:
 - #18 Issue 3.1 - Freeze M3 contract and audit official BR-Gen raw layout
 - #19 Issue 3.2 - Prepare formal BR-Gen manifests and perturbation-aware export
 - #20 Issue 3.3 - Add localized-failure sidecar reporting on top of the current runner
-- #21 Issue 3.4 - Execute formal Linux run and write milestone closeout
+- #21 Issue 3.4 - Formal Linux run and formal closeout path (deferred)
 - #22 Issue 3.5 - Expand restricted pilot evidence and failure mapping
