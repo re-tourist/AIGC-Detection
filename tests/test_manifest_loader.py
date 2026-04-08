@@ -74,6 +74,98 @@ class ManifestLoaderTests(unittest.TestCase):
             with self.assertRaises(ManifestValidationError):
                 load_manifest(manifest_path)
 
+    def test_remaps_stale_absolute_paths_via_source_root_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            current_source_root = root / "data" / "BR-Gen"
+            image_path = current_source_root / "Forged" / "BrushNet" / "Background" / "COCO" / "000000000034_background.png"
+            mask_path = current_source_root / "Mask" / "Background" / "COCO" / "000000000034_background.png"
+            image_path.parent.mkdir(parents=True, exist_ok=True)
+            mask_path.parent.mkdir(parents=True, exist_ok=True)
+            image_path.write_text("image", encoding="utf-8")
+            mask_path.write_text("mask", encoding="utf-8")
+
+            manifest_dir = root / "data" / "mirrored" / "br_gen" / "subsets" / "restricted_pilot" / "manifest"
+            manifest_dir.mkdir(parents=True, exist_ok=True)
+            manifest_path = manifest_dir / "formal_manifest.jsonl"
+            stale_source_root = "/home/workspace/AIGC/data/BRGen/BR-Gen"
+            manifest_path.write_text(
+                json.dumps(
+                    {
+                        "sample_id": "fake__brushnet__background__coco__000000000034_background__blur",
+                        "task_type": "localized_edit",
+                        "split": "restricted_pilot",
+                        "image_path": f"{stale_source_root}/Forged/BrushNet/Background/COCO/000000000034_background.png",
+                        "label": 1,
+                        "mask_path": f"{stale_source_root}/Mask/Background/COCO/000000000034_background.png",
+                        "generator_id": "BrushNet",
+                        "source_id": "COCO",
+                        "degradation": "blur",
+                        "region_type": "background",
+                        "meta": {
+                            "source_root": stale_source_root,
+                            "relative_path": "BrushNet/Background/COCO/000000000034_background.png",
+                            "evaluation_scope": "restricted_pilot",
+                        },
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            samples = load_manifest(manifest_path)
+
+            self.assertEqual(len(samples), 1)
+            self.assertEqual(samples[0].image_path, image_path.resolve())
+            self.assertEqual(samples[0].mask_path, mask_path.resolve())
+            self.assertTrue(samples[0].image_path.exists())
+            self.assertTrue(samples[0].mask_path.exists())
+
+    def test_remaps_stale_absolute_paths_through_brgen_parent_layout(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            current_source_root = root / "data" / "BRGen" / "BR-Gen"
+            image_path = current_source_root / "Forged" / "BrushNet" / "Background" / "COCO" / "000000000034_background.png"
+            mask_path = current_source_root / "Mask" / "Background" / "COCO" / "000000000034_background.png"
+            image_path.parent.mkdir(parents=True, exist_ok=True)
+            mask_path.parent.mkdir(parents=True, exist_ok=True)
+            image_path.write_text("image", encoding="utf-8")
+            mask_path.write_text("mask", encoding="utf-8")
+
+            manifest_dir = root / "data" / "mirrored" / "br_gen" / "subsets" / "restricted_pilot" / "manifest"
+            manifest_dir.mkdir(parents=True, exist_ok=True)
+            manifest_path = manifest_dir / "formal_manifest.jsonl"
+            stale_source_root = "/home/workspace/AIGC/data/BRGen/BR-Gen"
+            manifest_path.write_text(
+                json.dumps(
+                    {
+                        "sample_id": "fake__brushnet__background__coco__000000000034_background__blur",
+                        "task_type": "localized_edit",
+                        "split": "restricted_pilot",
+                        "image_path": f"{stale_source_root}/Forged/BrushNet/Background/COCO/000000000034_background.png",
+                        "label": 1,
+                        "mask_path": f"{stale_source_root}/Mask/Background/COCO/000000000034_background.png",
+                        "generator_id": "BrushNet",
+                        "source_id": "COCO",
+                        "degradation": "blur",
+                        "region_type": "background",
+                        "meta": {
+                            "source_root": stale_source_root,
+                            "relative_path": "BrushNet/Background/COCO/000000000034_background.png",
+                            "evaluation_scope": "restricted_pilot",
+                        },
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            samples = load_manifest(manifest_path)
+
+            self.assertEqual(len(samples), 1)
+            self.assertEqual(samples[0].image_path, image_path.resolve())
+            self.assertEqual(samples[0].mask_path, mask_path.resolve())
+
 
 if __name__ == "__main__":
     unittest.main()

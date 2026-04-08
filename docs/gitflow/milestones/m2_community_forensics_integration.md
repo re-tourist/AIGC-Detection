@@ -3,6 +3,12 @@
 GitHub milestone:
 - `https://github.com/re-tourist/AIGC-Detection/milestone/3`
 
+GitHub issues:
+- `#13` - https://github.com/re-tourist/AIGC-Detection/issues/13
+- `#14` - https://github.com/re-tourist/AIGC-Detection/issues/14
+- `#15` - https://github.com/re-tourist/AIGC-Detection/issues/15
+- `#16` - https://github.com/re-tourist/AIGC-Detection/issues/16
+
 ## Goal
 
 Integrate Community Forensics as a baseline candidate under the current repository contract.
@@ -69,6 +75,10 @@ The objective is integration, not paper reproduction.
 ## Issue Set
 
 - Issue 2.1 - Intake Community Forensics source and freeze adapter contract
+  - GitHub: https://github.com/re-tourist/AIGC-Detection/issues/13
 - Issue 2.2 - Implement prediction adapter and sample alignment
+  - GitHub: https://github.com/re-tourist/AIGC-Detection/issues/14
 - Issue 2.3 - Sanity-check adapter with BR-Gen rehearsal manifest
+  - GitHub: https://github.com/re-tourist/AIGC-Detection/issues/15
 - Issue 2.4 - Review and milestone closeout
+  - GitHub: https://github.com/re-tourist/AIGC-Detection/issues/16

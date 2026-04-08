@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from .schema import (
@@ -59,18 +59,17 @@ def _normalize_record(
         )
 
     label = _coerce_label(record["label"], line_number)
-    image_path = _resolve_existing_path(
-        record["image_path"], manifest_dir, "image_path", line_number
-    )
-    mask_path = _resolve_optional_path(
-        record.get("mask_path"), manifest_dir, "mask_path", line_number
-    )
-
     meta = record.get("meta") or {}
     if not isinstance(meta, dict):
         raise ManifestValidationError(
             f"meta must be an object at line {line_number}, got {type(meta).__name__}"
         )
+    image_path = _resolve_existing_path(
+        record["image_path"], manifest_dir, "image_path", line_number, meta=meta
+    )
+    mask_path = _resolve_optional_path(
+        record.get("mask_path"), manifest_dir, "mask_path", line_number, meta=meta
+    )
 
     return NormalizedSample(
         sample_id=_require_string(record["sample_id"], "sample_id", line_number),
@@ -141,21 +140,102 @@ def _optional_string(value: Any, field_name: str, line_number: int) -> str | Non
 
 
 def _resolve_existing_path(
-    raw_value: Any, manifest_dir: Path, field_name: str, line_number: int
+    raw_value: Any,
+    manifest_dir: Path,
+    field_name: str,
+    line_number: int,
+    *,
+    meta: dict[str, Any] | None = None,
 ) -> Path:
     raw_path = _require_string(raw_value, field_name, line_number)
-    path = (manifest_dir / raw_path).resolve()
-    if not path.exists():
-        raise ManifestValidationError(
-            f"{field_name} does not exist at line {line_number}: {path}"
-        )
-    return path
+    candidate_paths: list[Path] = []
+
+    raw_path_obj = Path(raw_path)
+    if raw_path_obj.is_absolute():
+        candidate_paths.append(raw_path_obj.resolve())
+    else:
+        candidate_paths.append((manifest_dir / raw_path_obj).resolve())
+
+    remapped_path = _remap_missing_path(
+        raw_value=raw_path,
+        raw_path=raw_path_obj,
+        manifest_dir=manifest_dir,
+        meta=meta,
+    )
+    if remapped_path is not None:
+        candidate_paths.append(remapped_path)
+
+    for path in candidate_paths:
+        if path.exists():
+            return path
+
+    raise ManifestValidationError(
+        f"{field_name} does not exist at line {line_number}: {candidate_paths[0]}"
+    )
 
 
 def _resolve_optional_path(
-    raw_value: Any, manifest_dir: Path, field_name: str, line_number: int
+    raw_value: Any,
+    manifest_dir: Path,
+    field_name: str,
+    line_number: int,
+    *,
+    meta: dict[str, Any] | None = None,
 ) -> Path | None:
     if raw_value is None:
         return None
-    return _resolve_existing_path(raw_value, manifest_dir, field_name, line_number)
+    return _resolve_existing_path(
+        raw_value,
+        manifest_dir,
+        field_name,
+        line_number,
+        meta=meta,
+    )
+
+
+def _remap_missing_path(
+    *,
+    raw_value: str,
+    raw_path: Path,
+    manifest_dir: Path,
+    meta: dict[str, Any] | None,
+) -> Path | None:
+    if not isinstance(meta, dict):
+        return None
+
+    source_root_raw = meta.get("source_root")
+    if not isinstance(source_root_raw, str) or not source_root_raw.strip():
+        return None
+
+    source_root_text = source_root_raw.strip()
+    source_root_parts = [
+        part for part in PurePosixPath(source_root_text).parts if part not in {"/", "\\"}
+    ]
+    layout_suffixes: list[tuple[str, ...]] = []
+    for size in range(min(3, len(source_root_parts)), 0, -1):
+        suffix = tuple(source_root_parts[-size:])
+        if suffix not in layout_suffixes:
+            layout_suffixes.append(suffix)
+
+    try:
+        if raw_value.startswith(("/", "\\")) or source_root_text.startswith(("/", "\\")):
+            relative_suffix = PurePosixPath(raw_value).relative_to(PurePosixPath(source_root_text))
+            relative_parts = relative_suffix.parts
+        else:
+            source_root = Path(source_root_text)
+            relative_suffix = raw_path.relative_to(source_root)
+            relative_parts = relative_suffix.parts
+    except ValueError:
+        return None
+
+    for ancestor in (manifest_dir, *manifest_dir.parents):
+        for layout_suffix in layout_suffixes:
+            candidate_root = ancestor.joinpath(*layout_suffix)
+            if not candidate_root.is_dir():
+                continue
+            candidate_path = candidate_root.joinpath(*relative_parts).resolve()
+            if candidate_path.exists():
+                return candidate_path
+
+    return None
 

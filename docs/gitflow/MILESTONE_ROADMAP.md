@@ -4,8 +4,13 @@
 
 This document is the current macro-level milestone source of truth.
 
-它替代了此前过于激进、把 baseline implementation、qualification、localized validation 混在一起的旧拆分。
-新的规划先补评测底座，再接 baseline，最后做真正的验证实验。
+当前路线已经从“先追 formal localized benchmark”调整成“两阶段推进”：
+- 先把 restricted-pilot 证据线跑实
+- 再沿 COCO-only engineering line 做方法验证
+
+因此 roadmap 必须显式区分：
+- benchmark 级结论
+- engineering 级方法验证
 
 ---
 
@@ -14,56 +19,71 @@ This document is the current macro-level milestone source of truth.
 ### M1: Data and Metric Pipeline Bootstrap
 
 目标：
-- 先把验证实验的底座搭起来，而不是直接跑强 baseline。
+- 先把 localized eval 所需的数据、schema、metric、artifact contract 建起来
 
 核心内容：
 - localized eval data pipeline
-- full-image / localized 的统一 sample schema
-- clean / degraded / slice 元信息读取
+- full-image / localized unified sample schema
+- clean / degraded / slice metadata loading
 - metric pipeline
 - result / artifact schema
-- 小样本 smoke check
-
-为什么先做这个：
-- 当前项目几乎没有可执行实验基础设施
-- 没有 data pipeline 和 metric pipeline，就无法“正确验证”
-- 这一步的目标是让后续 baseline integration 有稳定承载面
+- smoke checks
 
 ### M2: Community Forensics Integration
 
 目标：
-- 把 Community Forensics 作为 baseline 候选接入当前 pipeline，并确认其开源实现至少能正常运行、推理和被评测。
+- 将 Community Forensics 作为 strong baseline 候选接入当前 repo pipeline
 
 核心内容：
-- 接通 Community Forensics 开源仓库或其关键实现
-- 对齐输入输出与当前 repo 的 data / metric pipeline
-- 跑 inference / eval path 的最小 sanity check
-- 明确哪些部分借用它的方法定义，哪些不需要复刻其论文原始 eval protocol
-
-边界：
-- M2 不是完整复现 Community Forensics 论文的评测体系
-- M2 的重点是“在本项目协议下可接入、可运行、可被评测”
+- baseline adapter
+- repo-compatible prediction export
+- smoke fixture and runner sanity
+- M2 contract freeze and integration closeout
 
 ### M3: Strong Baseline Localized Failure Validation
 
 目标：
-- 在你的 localized eval protocol 下，正式验证 strong baseline 是否仍然存在结构性 localized failure。
+- 在当前 repo contract 下判断 strong baseline 是否存在结构化 localized failure
+
+实际收口状态：
+- expanded full-COCO `restricted_pilot` 已完成
+- formal M3 未完成，也不再作为当前主线继续推进
+- M3 当前按“close with documented limitations”处理
+- M3 的有效产出是一张 restricted-pilot 级 failure evidence map
+
+当前可复用结论：
+- `stuff` 区域是稳定 weak slice
+- `small / medium` edit area 是稳定 weak slice
+- `background` 仍然是 easy regime
+
+### M4: Community Forensics Local Module on COCO Engineering Line
+
+目标：
+- 在 Community Forensics baseline 之上接入一个 local module
+- 仅在 `COCO-only restricted_pilot` 工程线上判断它是否改善 M3 已识别的 weak slices
 
 核心内容：
-- 在大量 localized edit 测试样本上评测 baseline
-- 报 overall + slice
-- 分 clean / degraded
-- 回答 strong baseline 是否仍然在 localized edit 上系统性不足
-- 为是否进入 local branch + consistency 提供决策依据
+- freeze M4 的 COCO-only engineering boundary
+- 找到 local module 的最小集成点
+- baseline vs local-module 对比
+- 重点看：
+  - `stuff`
+  - `small / medium` edit area
+  - degradation 下的 slice 行为
+
+边界：
+- 不追 formal M3
+- 不引入 ImageNet / Places negatives
+- 不做 benchmark overclaim
 
 ---
 
 ## Planning Rule
 
-从现在开始，macro planning 按下面顺序走：
+当前宏观顺序调整为：
+1. `M1` 建 data / metric pipeline
+2. `M2` 接 Community Forensics baseline
+3. `M3` 建 restricted-pilot 级 failure evidence
+4. `M4` 在 COCO-only engineering line 上验证 local module
 
-1. `M1` 先立 data / metric pipeline
-2. `M2` 再接 Community Forensics baseline
-3. `M3` 最后做正式验证实验
-
-不要再把这三类工作合并到一个 milestone 里。
+不要把当前 M4 误写成 formal benchmark continuation。

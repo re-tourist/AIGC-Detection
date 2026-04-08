@@ -33,6 +33,30 @@ For multi-file, architecture-affecting, or ambiguous tasks:
 
 ---
 
+## Communication and execution defaults
+
+Unless the user explicitly asks otherwise:
+
+- respond in Chinese by default
+- treat heavy-compute work, including formal training, large-scale export, and full restricted-pilot validation, as Linux-server workflows
+- treat the local workspace as a code-editing and lightweight-validation environment, not as a substitute for the full data-mirror environment
+- when a task introduces a new experiment, rerun, or audit command, append the exact command to `docs/run_order.md` before execution
+- if `docs/run_order.md` does not exist, create it under `docs/` and keep the log chronological
+- write each command group with a short comment above it, and include a timestamped heading plus purpose / environment / output-root notes when relevant
+- do not overwrite earlier run-order entries; preserve historical commands so the log remains chronological
+
+When a task depends on a complete dataset mirror or server-side mount, for example the full BR-Gen forged-image mirror, do not use a local partial run as proof of end-to-end correctness. Local validation may still be used to verify:
+
+- code paths
+- CLI behavior
+- config parsing
+- unit tests
+- environment-specific failure modes
+
+If the required mirror or mount is missing locally, report that as an environment limitation instead of inferring a code defect or a successful experiment.
+
+---
+
 ## What this repository expects from agents
 
 Always try to:

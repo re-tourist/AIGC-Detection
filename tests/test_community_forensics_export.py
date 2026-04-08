@@ -15,7 +15,14 @@ from PIL import Image
 from aigc_detection.data import load_manifest
 
 
+_EXPORT_MODULE = None
+
+
 def _load_export_module():
+    global _EXPORT_MODULE
+    if _EXPORT_MODULE is not None:
+        return _EXPORT_MODULE
+
     script_path = Path(__file__).resolve().parents[1] / "scripts" / "export_community_forensics_predictions.py"
     spec = importlib.util.spec_from_file_location("test_export_community_forensics_predictions", script_path)
     if spec is None or spec.loader is None:
@@ -39,10 +46,32 @@ def _load_export_module():
         },
     ):
         spec.loader.exec_module(module)
+    _EXPORT_MODULE = module
     return module
 
 
 class CommunityForensicsExportTests(unittest.TestCase):
+    def test_build_parser_exposes_local_module_flags(self) -> None:
+        export_module = _load_export_module()
+
+        args = export_module.build_parser().parse_args(
+            [
+                "--manifest",
+                "manifest.jsonl",
+                "--output",
+                "predictions.jsonl",
+                "--use-local-module",
+                "--local-module-config",
+                "configs/model/local_module.yaml",
+                "--progress-every",
+                "25",
+            ]
+        )
+
+        self.assertTrue(args.use_local_module)
+        self.assertEqual(args.local_module_config, "configs/model/local_module.yaml")
+        self.assertEqual(args.progress_every, 25)
+
     def test_manifest_image_dataset_applies_optional_perturbation(self) -> None:
         export_module = _load_export_module()
 
@@ -107,6 +136,64 @@ class CommunityForensicsExportTests(unittest.TestCase):
 
             self.assertTrue(np.array_equal(clean_item[0], np.asarray(Image.open(image_path).convert("RGB"))))
             self.assertFalse(np.array_equal(clean_item[0], jpeg_item[0]))
+
+    def test_load_model_forwards_local_module_config_only_when_enabled(self) -> None:
+        export_module = _load_export_module()
+
+        calls = []
+
+        class _DummyLoadedModel:
+            def __init__(self) -> None:
+                self.to_calls = []
+                self.eval_called = False
+
+            def to(self, device):
+                self.to_calls.append(device)
+                return self
+
+            def eval(self):
+                self.eval_called = True
+                return self
+
+        class _FakeViTClassifier:
+            @classmethod
+            def from_pretrained(cls, *args, **kwargs):
+                calls.append(kwargs.copy())
+                return _DummyLoadedModel()
+
+        fake_models = types.ModuleType("models")
+        fake_models.ViTClassifier = _FakeViTClassifier
+
+        with patch.dict(sys.modules, {"models": fake_models}):
+            baseline_model = export_module._load_model(
+                hf_model_repo="repo-a",
+                model_size="small",
+                input_size=384,
+                patch_size=16,
+                device="cpu",
+                use_local_module=False,
+                local_module_config=None,
+            )
+            local_model = export_module._load_model(
+                hf_model_repo="repo-b",
+                model_size="small",
+                input_size=384,
+                patch_size=16,
+                device="cpu",
+                use_local_module=True,
+                local_module_config={"type": "topk", "k": 8},
+            )
+
+        self.assertIsInstance(baseline_model, _DummyLoadedModel)
+        self.assertIsInstance(local_model, _DummyLoadedModel)
+        self.assertEqual(calls[0]["use_local_module"], False)
+        self.assertIsNone(calls[0]["local_module_config"])
+        self.assertEqual(calls[1]["use_local_module"], True)
+        self.assertEqual(calls[1]["local_module_config"], {"type": "topk", "k": 8})
+        self.assertEqual(baseline_model.to_calls, ["cpu"])
+        self.assertTrue(baseline_model.eval_called)
+        self.assertEqual(local_model.to_calls, ["cpu"])
+        self.assertTrue(local_model.eval_called)
 
 
 if __name__ == "__main__":
