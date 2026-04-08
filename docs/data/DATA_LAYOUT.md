@@ -80,6 +80,8 @@ data/
           images/
           masks/
           predictions/
+        formal/
+          manifest/
       snapshots/
     placeholders/
   external/
@@ -161,6 +163,17 @@ Expected contents:
 - `masks/` when available
 - `predictions/` for dummy or baseline exports
 
+### `data/mirrored/br_gen/subsets/formal/`
+
+Use this for formal M3 manifest artifacts derived from the official external BR-Gen root.
+
+Expected contents:
+- `manifest/`
+
+Important:
+- this folder stores manifests and layout-audit outputs, not a copied full BR-Gen raw tree
+- the official BR-Gen raw data should remain at the external Linux source root
+
 ### `data/mirrored/br_gen/snapshots/`
 
 Use this for lightweight directory snapshots, notes, or inventories copied from the server.
@@ -228,6 +241,24 @@ Optional but useful:
 - `masks/`
 - `predictions/dummy_predictions.jsonl`
 - `predictions/community_forensics_predictions.jsonl`
+
+For formal M3 localized validation, generate manifests from the official external source root into:
+
+```text
+data/mirrored/br_gen/subsets/formal/
+  manifest/
+    clean_manifest.jsonl
+    formal_manifest.jsonl
+    layout_audit.json
+```
+
+Recommended command:
+
+```text
+python scripts/prepare_br_gen_m3_formal.py --source-root /media/ruanzhengsen/02EE2033DCBE79181/xyj/BRGen/BR-Gen --output-root data/mirrored/br_gen/subsets/formal
+```
+
+This keeps the full raw dataset outside the repository while still creating traceable formal manifests.
 
 If the first source drop arrives outside the recommended layout, for example under:
 

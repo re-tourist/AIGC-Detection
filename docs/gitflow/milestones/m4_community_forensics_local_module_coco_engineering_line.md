@@ -5,7 +5,7 @@ GitHub milestone:
 
 ## Status
 
-- Planned milestone
+- Closed milestone
 - Entry condition is satisfied:
   - expanded full-COCO restricted pilot from M3 has completed
   - failure evidence map exists
@@ -17,6 +17,9 @@ GitHub milestone:
   - formal M3 continuation
   - ImageNet / Places negatives
   - paper-ready benchmark claims
+- Formal closeout completed:
+  - GitHub milestone `#5` is closed
+  - GitHub issues `#23` - `#26` are closed
 
 ## Goal
 

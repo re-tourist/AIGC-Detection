@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import torch
 from PIL import Image
@@ -15,10 +17,12 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 EXTERNAL_ROOT = REPO_ROOT / "external" / "Community-Forensics"
 
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
 if str(EXTERNAL_ROOT) not in sys.path:
     sys.path.insert(0, str(EXTERNAL_ROOT))
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from aigc_detection.data.manifest import load_manifest
 from aigc_detection.eval.perturbations import apply_manifest_perturbation, get_manifest_perturbation
@@ -30,6 +34,23 @@ class ExportArtifacts:
     manifest_path: Path
     sample_count: int
     device: str
+
+
+@contextmanager
+def _seeded_torch_rng(seed: int | None):
+    if seed is None:
+        yield
+        return
+
+    cpu_state = torch.random.get_rng_state()
+    cuda_state = torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+    try:
+        torch.manual_seed(seed)
+        yield
+    finally:
+        torch.random.set_rng_state(cpu_state)
+        if cuda_state is not None:
+            torch.cuda.set_rng_state_all(cuda_state)
 
 
 class ManifestImageDataset(Dataset):
@@ -77,12 +98,28 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument(
+        "--use-local-module",
+        action="store_true",
+        help="Enable the inference-time local evidence probe.",
+    )
+    parser.add_argument(
+        "--local-module-config",
+        default=str(REPO_ROOT / "configs" / "model" / "local_module.yaml"),
+        help="YAML file containing model.local_module parameters.",
+    )
+    parser.add_argument(
         "--device",
         default="auto",
         choices=("auto", "cpu", "cuda"),
         help="Inference device. Auto prefers CUDA when available.",
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--progress-every",
+        type=int,
+        default=0,
+        help="Emit progress every N batches while exporting. 0 disables progress logs.",
+    )
     return parser
 
 
@@ -107,19 +144,28 @@ def main() -> int:
         pin_memory=(device == "cuda"),
     )
 
-    model = _load_model(
-        hf_model_repo=args.hf_model_repo,
-        model_size=args.model_size,
-        input_size=args.input_size,
-        patch_size=args.patch_size,
-        device=device,
+    local_module_config = _load_local_module_config_if_enabled(
+        enabled=args.use_local_module,
+        config_path=args.local_module_config,
     )
+    with _seeded_torch_rng(args.seed if args.use_local_module else None):
+        model = _load_model(
+            hf_model_repo=args.hf_model_repo,
+            model_size=args.model_size,
+            input_size=args.input_size,
+            patch_size=args.patch_size,
+            device=device,
+            use_local_module=args.use_local_module,
+            local_module_config=local_module_config,
+        )
+    local_module_metadata = _describe_local_module_config(local_module_config)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     records_written = 0
+    total_batches = len(dataloader)
     with torch.inference_mode():
         with output_path.open("w", encoding="utf-8") as handle:
-            for batch in dataloader:
+            for batch_index, batch in enumerate(dataloader, start=1):
                 (
                     inputs,
                     sample_ids,
@@ -164,6 +210,8 @@ def main() -> int:
                             "score_semantics": "higher_is_more_likely_fake_probability",
                         },
                     }
+                    if args.use_local_module:
+                        record["meta"]["local_module"] = local_module_metadata
                     sample_meta = sample_meta_by_id.get(sample_id)
                     if isinstance(sample_meta, dict) and sample_meta.get("evaluation_scope"):
                         record["meta"]["evaluation_scope"] = sample_meta["evaluation_scope"]
@@ -171,6 +219,15 @@ def main() -> int:
                         record["meta"]["perturbation"] = json.loads(perturbation_json)
                     handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                     records_written += 1
+
+                if args.progress_every > 0 and (
+                    batch_index % args.progress_every == 0 or batch_index == total_batches
+                ):
+                    print(
+                        f"Export progress: batch {batch_index}/{total_batches}, "
+                        f"records={records_written}/{len(dataset)}",
+                        flush=True,
+                    )
 
     print(f"Manifest: {manifest_path}")
     print(f"Output: {output_path}")
@@ -206,6 +263,8 @@ def _load_model(
     input_size: int,
     patch_size: int,
     device: str,
+    use_local_module: bool = False,
+    local_module_config: Any | None = None,
 ):
     try:
         from models import ViTClassifier
@@ -227,6 +286,8 @@ def _load_model(
             freeze_backbone=False,
             device=device,
             dtype=torch.float32,
+            use_local_module=use_local_module,
+            local_module_config=local_module_config,
         ).to(device)
         model.eval()
         return model
@@ -242,9 +303,33 @@ def _load_model(
             freeze_backbone=False,
             device=fallback_device,
             dtype=torch.float32,
+            use_local_module=use_local_module,
+            local_module_config=local_module_config,
         ).to(fallback_device)
         model.eval()
         return model
+
+
+def _load_local_module_config_if_enabled(*, enabled: bool, config_path: str):
+    if not enabled:
+        return None
+    from models import load_local_module_config
+
+    return load_local_module_config(config_path)
+
+
+def _describe_local_module_config(local_module_config: Any) -> dict[str, Any]:
+    if local_module_config is None:
+        return {}
+    module_type = getattr(local_module_config, "module_type", None)
+    k = getattr(local_module_config, "k", None)
+    if module_type is None and isinstance(local_module_config, dict):
+        module_type = local_module_config.get("type", local_module_config.get("module_type"))
+        k = local_module_config.get("k")
+    return {
+        "type": module_type,
+        "k": k,
+    }
 
 
 if __name__ == "__main__":

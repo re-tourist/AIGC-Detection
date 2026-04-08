@@ -1,0 +1,4 @@
+model:
+  local_module:
+    type: topk
+    k: 16
