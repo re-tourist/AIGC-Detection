@@ -87,3 +87,103 @@ This document is the current macro-level milestone source of truth.
 4. `M4` 在 COCO-only engineering line 上验证 local module
 
 不要把当前 M4 误写成 formal benchmark continuation。
+---
+
+### M5: Trainable Soft Local Aggregation on COCO Restricted Pilot
+
+Goal:
+- test whether a minimal trainable soft local aggregation path can amplify the
+  stable local-evidence signal from M4 without breaking the easy regime
+
+Core content:
+- frozen-backbone validation only
+- COCO-only restricted pilot
+- frozen holdout split contract
+- baseline vs M4 vs M5 comparison on the same frozen holdout
+
+Boundary:
+- not a benchmark milestone
+- not cross-dataset completion
+- not subtlety completion
+- not consistency work
+- not full finetuning
+
+Planning rule update:
+1. `M1` build the data / metric pipeline
+2. `M2` integrate Community Forensics baseline
+3. `M3` validate restricted-pilot failure evidence
+4. `M4` validate the no-train local probe on the COCO engineering line
+5. `M5` test trainable soft local aggregation on the same restricted-pilot boundary
+
+### M5b: Local-Module Attribution Closeout
+
+Goal:
+- keep M5 frozen and separate localized training effect from local-module structural effect
+
+Core content:
+- `localized_train_global_only_control`
+- paired `control vs M5` attribution
+- multi-seed paper-minimum evidence
+
+Boundary:
+- not a new milestone
+- not benchmark expansion
+- not consistency / robustness / subtlety work
+
+Planning rule update:
+6. `M5b` runs after M5a closeout as a phase-style attribution closeout within M5
+
+### M6: BR-Gen-style Evaluation Protocol Alignment
+
+Goal:
+- align the repo evaluation/reporting grammar with BR-Gen-style reporting
+  without changing the current task boundary
+
+Core content:
+- preserve `accuracy / auroc / fake_recall`
+- add paper-style `F1` and `Recall@50` style reporting
+- add threshold-difference audit fields
+- derive `generator_family` and `area_bin` for reporting
+- export standardized JSON / CSV / Markdown artifacts
+- support `overall`, `background`, `stuff`, `GAN`, `Diffusion`,
+  `small`, `medium`, `large`, `clean`, `degraded`, and degradation-detail rows
+
+Boundary:
+- not a new method milestone
+- not segmentation-heavy localization benchmarking
+- not IoU formalization
+- not itself a method verdict repair milestone
+
+Planning rule update:
+7. `M6` calibrates the evaluation ruler before any further method push
+
+Closeout note:
+- GitHub milestone `#6` is closed
+- the repo now carries a finalized closeout record and fixture-backed paper-style summary
+
+### M7: Matched-Control Audit and Fairness Repair
+
+Goal:
+- audit every fairness dimension that can distort the attribution verdict
+  between `current_local` and the existing `control`
+- repair the control into a conceptually matched `global-only` arm
+- rerun the attribution question under a fairer three-arm protocol
+
+Core content:
+- forward-path audit
+- freeze / no-grad audit
+- head / trainable-parameter audit
+- optimization / protocol parity audit
+- memory / compute audit
+- repaired `matched_global_only_control`
+- seed `42/43` required replay plus seed `44` canary
+
+Boundary:
+- not a new local-module method milestone
+- not gated fusion / new loss / consistency work
+- not benchmark expansion
+- not formal benchmark overclaim
+- not a replacement of historical M5b artifacts
+
+Planning rule update:
+8. `M7` repairs the attribution/control ground truth before any further local-module push

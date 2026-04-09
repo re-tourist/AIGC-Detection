@@ -1,0 +1,52 @@
+{
+  "blocked_reasons": [
+    "IoU remains deferred because the repo does not expose a stable mask-prediction path or a frozen localization evaluation contract for paper-comparable reporting."
+  ],
+  "deferred": [
+    {
+      "item": "IoU",
+      "reason": "IoU remains deferred because the repo does not expose a stable mask-prediction path or a frozen localization evaluation contract for paper-comparable reporting."
+    }
+  ],
+  "evaluation_scope": "restricted_pilot",
+  "excluded_counts": {
+    "excluded_from_split_a_count": 0,
+    "excluded_generator_ids": [],
+    "unknown_generator_count": 0,
+    "unsupported_generator_count": 0
+  },
+  "fully_aligned": [
+    "Legacy metrics remain additive and preserved.",
+    "Paper-style F1 / Recall@50 style reporting is exported as JSON/CSV/Markdown artifacts.",
+    "Split A and Split B naming grammar is aligned for reporting.",
+    "clean/degraded dual reporting is exported together with degradation-detail rows."
+  ],
+  "generator_family_mapping": {
+    "canonicalization_rule": "lowercase(trim(raw_generator_id)).remove('-', '_', ' ')",
+    "mapping": {
+      "brushnet": "Diffusion",
+      "lama": "GAN",
+      "mat": "GAN",
+      "powerpaint": "Diffusion",
+      "sdxl": "Diffusion"
+    },
+    "supported_families": [
+      "GAN",
+      "Diffusion"
+    ]
+  },
+  "paper_style_threshold_contract_note": "paper_style_threshold=0.5 is a repo-frozen M6 alignment contract used to construct BR-Gen-style Recall@50 reporting. It is not claimed as a reconstruction of unpublished paper implementation details.",
+  "partially_aligned": [
+    "generator_family is derived from canonicalized generator_id rather than stored as raw manifest metadata.",
+    "area_bin uses repo_frozen_alignment_bins and aligns the paper naming grammar only.",
+    "Conditioned slices use the repo's clean-shared-negative contract instead of claiming the paper's original benchmark pairing.",
+    "The restricted pilot remains diagnostic evidence and is not promoted to a formal benchmark claim."
+  ],
+  "repo_frozen_alignment_bins": {
+    "large_gte": 0.2,
+    "medium_gte": 0.05,
+    "medium_lt": 0.2,
+    "small_lt": 0.05
+  },
+  "runner": "m6_br_gen_style_protocol_alignment"
+}
