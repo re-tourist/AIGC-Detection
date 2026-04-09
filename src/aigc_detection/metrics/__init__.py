@@ -1,5 +1,27 @@
-"""Minimal metric computation utilities for the M1 bootstrap milestone."""
+"""Metric computation utilities shared across the repo evaluation pipeline."""
 
-from .core import MetricValidationError, build_metric_report
+from .core import (
+    PAPER_STYLE_ALIGNMENT_THRESHOLD,
+    MetricValidationError,
+    build_metric_report,
+    compute_auroc,
+    compute_binary_f1,
+    compute_negative_recall,
+    compute_positive_recall,
+    summarize_binary_classification,
+    summarize_sample_group,
+    validate_scores_by_sample_id,
+)
 
-__all__ = ["MetricValidationError", "build_metric_report"]
+__all__ = [
+    "PAPER_STYLE_ALIGNMENT_THRESHOLD",
+    "MetricValidationError",
+    "build_metric_report",
+    "compute_auroc",
+    "compute_binary_f1",
+    "compute_negative_recall",
+    "compute_positive_recall",
+    "summarize_binary_classification",
+    "summarize_sample_group",
+    "validate_scores_by_sample_id",
+]

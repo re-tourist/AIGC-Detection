@@ -5,7 +5,11 @@ from dataclasses import replace
 from pathlib import Path
 
 from aigc_detection.data import load_manifest
-from aigc_detection.metrics import MetricValidationError, build_metric_report
+from aigc_detection.metrics import (
+    MetricValidationError,
+    build_metric_report,
+    summarize_binary_classification,
+)
 
 
 FIXTURE_MANIFEST = (
@@ -33,6 +37,31 @@ class MetricCoreTests(unittest.TestCase):
         self.assertAlmostEqual(report["overall"]["metrics"]["auroc"], 1.0)
         self.assertAlmostEqual(report["overall"]["metrics"]["accuracy"], 1.0)
         self.assertAlmostEqual(report["overall"]["metrics"]["fake_recall"], 1.0)
+        self.assertAlmostEqual(
+            report["overall"]["paper_metrics"]["f1_at_paper_style_threshold"],
+            1.0,
+        )
+        self.assertAlmostEqual(
+            report["overall"]["paper_metrics"]["paper_manipulated_recall_at_0_5"],
+            1.0,
+        )
+        self.assertAlmostEqual(
+            report["overall"]["paper_metrics"]["paper_real_recall_at_0_5"],
+            1.0,
+        )
+        self.assertAlmostEqual(
+            report["overall"]["metric_audit"]["legacy_fake_recall_value"],
+            1.0,
+        )
+        self.assertAlmostEqual(
+            report["overall"]["metric_audit"]["paper_manipulated_recall_at_0_5"],
+            1.0,
+        )
+        self.assertEqual(report["overall"]["metric_audit"]["legacy_threshold"], 0.5)
+        self.assertEqual(report["overall"]["metric_audit"]["paper_style_threshold"], 0.5)
+        self.assertTrue(
+            report["overall"]["metric_audit"]["legacy_equals_paper_manipulated_recall"]
+        )
 
         self.assertEqual(report["grouped"]["task_type"]["status"], "ok")
         self.assertIn("localized_edit", report["grouped"]["task_type"]["groups"])
@@ -72,6 +101,47 @@ class MetricCoreTests(unittest.TestCase):
 
         with self.assertRaises(MetricValidationError):
             build_metric_report(samples, extra_scores)
+
+    def test_summarize_binary_classification_marks_single_class_metrics_as_undefined(self) -> None:
+        summary = summarize_binary_classification(
+            [1, 1],
+            [0.55, 0.90],
+            legacy_threshold=0.6,
+        )
+
+        self.assertEqual(summary["status"], "ok")
+        self.assertIsNone(summary["metrics"]["auroc"])
+        self.assertAlmostEqual(summary["metrics"]["accuracy"], 0.5)
+        self.assertAlmostEqual(summary["metrics"]["fake_recall"], 0.5)
+        self.assertAlmostEqual(
+            summary["paper_metrics"]["paper_manipulated_recall_at_0_5"],
+            1.0,
+        )
+        self.assertIsNone(summary["paper_metrics"]["paper_real_recall_at_0_5"])
+        self.assertIsNone(summary["paper_metrics"]["f1_at_paper_style_threshold"])
+        self.assertFalse(summary["metric_audit"]["legacy_equals_paper_manipulated_recall"])
+        self.assertIn("auroc", summary["metric_audit"]["undefined_metric_names"])
+        self.assertIn(
+            "paper_real_recall_at_0_5",
+            summary["metric_audit"]["undefined_metric_names"],
+        )
+        self.assertIn(
+            "f1_at_paper_style_threshold",
+            summary["metric_audit"]["undefined_metric_names"],
+        )
+
+    def test_summarize_binary_classification_returns_empty_slice_payload(self) -> None:
+        summary = summarize_binary_classification([], [], legacy_threshold=0.5)
+
+        self.assertEqual(summary["status"], "empty_slice")
+        self.assertEqual(summary["sample_count"], 0)
+        self.assertIsNone(summary["metrics"]["auroc"])
+        self.assertIsNone(summary["metrics"]["accuracy"])
+        self.assertIsNone(summary["paper_metrics"]["f1_at_paper_style_threshold"])
+        self.assertIsNone(
+            summary["metric_audit"]["legacy_equals_paper_manipulated_recall"]
+        )
+        self.assertIn("The group contains no samples.", summary["notes"])
 
 
 if __name__ == "__main__":
